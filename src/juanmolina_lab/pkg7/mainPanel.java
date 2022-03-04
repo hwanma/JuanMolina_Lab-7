@@ -59,6 +59,11 @@ public class mainPanel extends javax.swing.JFrame {
         EquiposMenu.add(ItemEliminar);
 
         ItemCargar.setText("Cargar");
+        ItemCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemCargarActionPerformed(evt);
+            }
+        });
         EquiposMenu.add(ItemCargar);
 
         jMenuBar1.add(EquiposMenu);
@@ -90,8 +95,32 @@ public class mainPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ItemCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemCrearActionPerformed
-        // TODO add your handling code here:
+        File archivo=null;
+        FileWriter fw=null;
+        BufferedWriter bw=null;
+        
+            try{
+                archivo = new File("./fifa.txt");
+                fw=new FileWriter(archivo,true);
+                bw=new BufferedWriter(fw);
+                
+                String nombre;
+                nombre=JOptionPane.showInputDialog("Nombre del equipo: ");
+                
+                
+                bw.write(nombre+";0;0;0;0;0;0;0;0\n");
+                bw.flush();
+                
+            } catch(Exception e){
+                
+            }
+        
     }//GEN-LAST:event_ItemCrearActionPerformed
+
+    private void ItemCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemCargarActionPerformed
+        cargarArchivo();
+        System.out.println(equipos);
+    }//GEN-LAST:event_ItemCargarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,8 +156,6 @@ public class mainPanel extends javax.swing.JFrame {
             }
         });
     }
-    
-    ArrayList<equipo> equipos = new ArrayList();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu EquiposMenu;
@@ -141,4 +168,27 @@ public class mainPanel extends javax.swing.JFrame {
     private javax.swing.JMenu PartidosMenu;
     private javax.swing.JMenuBar jMenuBar1;
     // End of variables declaration//GEN-END:variables
+    
+    ArrayList<equipo> equipos = new ArrayList();
+    
+    public void cargarArchivo(){
+        File archivo = null;
+        FileReader fr = null;
+        BufferedReader br = null;
+        FileInputStream file = null;
+
+        try {
+            BufferedReader in = new BufferedReader(new FileReader("./fifa.txt"));
+            String str;
+            while ((str = in.readLine()) != null) {
+                String[] ar = str.split(";");
+            }
+            in.close();
+        } catch (IOException e) {
+            System.out.println("File Read Error");
+        }
+    }
+
+
+
 }
