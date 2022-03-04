@@ -17,8 +17,11 @@ public class mainPanel extends javax.swing.JFrame {
     /**
      * Creates new form mainPanel
      */
-    public mainPanel() {
+    public mainPanel() throws IOException {
         initComponents();
+        this.setLocationRelativeTo(null);
+        //cargarClientes();
+        cargarArchivo();
     }
 
     /**
@@ -30,15 +33,19 @@ public class mainPanel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
         EquiposMenu = new javax.swing.JMenu();
         ItemCrear = new javax.swing.JMenuItem();
         ItemModificar = new javax.swing.JMenuItem();
         ItemEliminar = new javax.swing.JMenuItem();
         ItemCargar = new javax.swing.JMenuItem();
+        ItemGuardar = new javax.swing.JMenuItem();
         PartidosMenu = new javax.swing.JMenu();
         ItemSimulacion = new javax.swing.JMenuItem();
         ItemTabla = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,6 +63,11 @@ public class mainPanel extends javax.swing.JFrame {
         EquiposMenu.add(ItemModificar);
 
         ItemEliminar.setText("Eliminar");
+        ItemEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemEliminarActionPerformed(evt);
+            }
+        });
         EquiposMenu.add(ItemEliminar);
 
         ItemCargar.setText("Cargar");
@@ -65,6 +77,14 @@ public class mainPanel extends javax.swing.JFrame {
             }
         });
         EquiposMenu.add(ItemCargar);
+
+        ItemGuardar.setText("Guardar");
+        ItemGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemGuardarActionPerformed(evt);
+            }
+        });
+        EquiposMenu.add(ItemGuardar);
 
         jMenuBar1.add(EquiposMenu);
 
@@ -125,6 +145,18 @@ public class mainPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ItemCargarActionPerformed
 
+    private void ItemEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemEliminarActionPerformed
+        equipos.remove(seleccionar());
+    }//GEN-LAST:event_ItemEliminarActionPerformed
+
+    private void ItemGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemGuardarActionPerformed
+        try {
+            guardarArchivo();
+        } catch (IOException ex) {
+            Logger.getLogger(mainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_ItemGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -155,7 +187,11 @@ public class mainPanel extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new mainPanel().setVisible(true);
+                try {
+                    new mainPanel().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(mainPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -165,11 +201,13 @@ public class mainPanel extends javax.swing.JFrame {
     private javax.swing.JMenuItem ItemCargar;
     private javax.swing.JMenuItem ItemCrear;
     private javax.swing.JMenuItem ItemEliminar;
+    private javax.swing.JMenuItem ItemGuardar;
     private javax.swing.JMenuItem ItemModificar;
     private javax.swing.JMenuItem ItemSimulacion;
     private javax.swing.JMenuItem ItemTabla;
     private javax.swing.JMenu PartidosMenu;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
     
     ArrayList<equipo> equipos = new ArrayList();
@@ -179,7 +217,6 @@ public class mainPanel extends javax.swing.JFrame {
         FileReader fr = null;
         BufferedReader br = null;
         FileInputStream file = null;
-        
 
         try {
             archivo = new File("./fifa.txt");
@@ -209,7 +246,27 @@ public class mainPanel extends javax.swing.JFrame {
         fr.close();
         
     }
+    
+    public void guardarArchivo() throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter("./fifa.txt"));
+        
+        String acum = "";
+        for (equipo temp : equipos) {
+            acum += temp.toString();
+        }
 
+        bw.write(acum + "\n");
+        bw.flush();
+    }
 
+    public int seleccionar(){
+        String selecciones = "";
+        for (equipo temp : equipos) {
+            selecciones += (equipos.indexOf(temp)+". " + temp.getNombre()+"\n");
+        }
+        JOptionPane.showMessageDialog(null,selecciones);
+        int opcion = Integer.parseInt(JOptionPane.showInputDialog("Que indice selecciona? "));
+        return opcion;
+    }
 
 }
