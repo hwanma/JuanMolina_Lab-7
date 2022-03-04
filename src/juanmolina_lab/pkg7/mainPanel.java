@@ -118,8 +118,11 @@ public class mainPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_ItemCrearActionPerformed
 
     private void ItemCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemCargarActionPerformed
-        cargarArchivo();
-        System.out.println(equipos);
+        try {
+            cargarArchivo();
+        } catch (IOException ex) {
+            Logger.getLogger(mainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_ItemCargarActionPerformed
 
     /**
@@ -171,22 +174,40 @@ public class mainPanel extends javax.swing.JFrame {
     
     ArrayList<equipo> equipos = new ArrayList();
     
-    public void cargarArchivo(){
+    public void cargarArchivo() throws IOException{
         File archivo = null;
         FileReader fr = null;
         BufferedReader br = null;
         FileInputStream file = null;
+        
 
         try {
-            BufferedReader in = new BufferedReader(new FileReader("./fifa.txt"));
+            archivo = new File("./fifa.txt");
+            fr = new FileReader(archivo);
+            br = new BufferedReader(fr);
+            
             String str;
-            while ((str = in.readLine()) != null) {
+            while ((str = br.readLine()) != null) {
                 String[] ar = str.split(";");
+                equipo leer = new equipo(ar[0],Integer.parseInt(ar[1]),Integer.parseInt(ar[2]),Integer.parseInt(ar[3]),Integer.parseInt(ar[4]),Integer.parseInt(ar[5]),Integer.parseInt(ar[6]),Integer.parseInt(ar[7]));
+                equipos.add(leer);
             }
-            in.close();
-        } catch (IOException e) {
-            System.out.println("File Read Error");
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(mainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(mainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                br.close();
+            } catch (IOException ex) {
+                Logger.getLogger(mainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        
+        br.close();
+        fr.close();
+        
     }
 
 
